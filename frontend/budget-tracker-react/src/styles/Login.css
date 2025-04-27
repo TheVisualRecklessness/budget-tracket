@@ -1,0 +1,70 @@
+#authentication-section {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+}
+
+.radio-field {
+    margin-top: 5vh;
+    border-color: rgb(58, 181, 238);
+    padding: 10px;
+    border-radius: 5px;
+    color: white;
+    display: flex;
+    width: 20%;
+    justify-content: space-around;
+    align-items: center;
+
+    legend {
+        text-align: center;
+        padding: 0 5px;
+    }
+    label {
+        cursor: pointer;
+
+        input {
+            cursor: pointer;
+            margin-right: 5px;
+        }
+    }
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    margin: 5vh 0;
+}
+
+.form-input-group {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 20px;
+
+    label {
+        margin-bottom: 5px;
+        color: white;
+    }
+    input {
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid white;
+        background-color: #0d1216;
+        color: white;
+        transition: border-color 0.15s ease-in-out;
+
+        &:focus {
+            outline: none;
+            border-color: rgb(58, 181, 238);
+        }
+    }
+}
+
+@media screen and (width >= 1280px) {
+    #authentication-section {
+        height: 100vh;
+    }
+
+    .radio-field {
+        height: 10vh;
+    }
+}

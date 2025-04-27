@@ -7,9 +7,10 @@ import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import cookie from 'cookie-parser';
 
-const app = express();
-const PORT = process.env.PORT || 4000;
 dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 4001;
 const JWT_SECRET = process.env.JWT_SECRET
 
 
@@ -26,13 +27,14 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cors(
     {
         origin: process.env.FRONTEND_URL,
+        credentials: true
     }
 ));
 
 // Middlewares
 app.use((req, res, next) => {
     if (req.body) {
-        if (req.body.password && req.path === '/users/new' && req.method === 'POST') {
+        if (req.body.password && req.path === '/register' && req.method === 'POST') {
             const hashedPassword = bcrypt.hashSync(req.body.password, 10);
             req.body.password = hashedPassword;
         }
@@ -57,7 +59,7 @@ const authenticateToken = (req, res, next) => {
     });
 }
 
-app.post('/users/new', (req, res) => {
+app.post('/register', (req, res) => {
     const { username, email, password } = req.body;
 
     db.run('INSERT INTO user (name, email, password) VALUES (?, ?, ?)', [username, email, password], (err) => {
@@ -82,9 +84,17 @@ app.post('/login', (req, res) => {
 
         const userIdToken = jwt.sign({ id: row.id }, JWT_SECRET, { expiresIn: '72h' });
         res.cookie('userIdToken', userIdToken, { httpOnly: true });
-        res.status(200).json({ message: `Gusto de verte de nuevo, ${row.name}` });
+        let name = row.name
+        name = name.charAt(0).toUpperCase() + name.slice(1);
+        res.status(200).json({ message: `Gusto de verte de nuevo, ${name}`});
     });
 })
+
+app.post('/logout', (req, res) => {
+    res.clearCookie('userIdToken', { httpOnly: true })
+    res.status(200).json({ message: 'Logout successful' })
+
+});
 
 app.get('/some-user', authenticateToken, (req, res) => {
     const userId = req.user.id;
