@@ -1,14 +1,12 @@
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import axios from "axios";
 import { type authenticationType } from "../types/authentication";
 import '../styles/Login.css'
+import { AuthContext } from "../authentication/AuthContext";
 
 export const Login = () => {
-    // i need two options here, one for login and one for register
-    // I will use a state to track the value of a radio field between the two options
-    // I will use a form to login and another to register
-
+    const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext)
     const [isLogin, setIsLogin] = useState<authenticationType>('login');
     const [password, setPassword] = useState('')
     const [validated, setValidated] = useState(false)
@@ -25,12 +23,15 @@ export const Login = () => {
         const formData = new FormData(form)
         const data = Object.fromEntries(formData.entries())
 
-        axios.post(`http://localhost:4000/${isLogin}`, data)
+        axios.post(`http://localhost:4000/${isLogin}`, data, {
+            withCredentials: true
+        })
         .then(res => {
             console.log(res.data.message)
             if (isLogin === 'register') {
                 setIsLogin('login')
             } else {
+                setIsAuthenticated(true)
                 navigate('/')
             }
         })
@@ -49,6 +50,10 @@ export const Login = () => {
             setValidated(input.value === password)
         }
     }
+
+    useEffect(() => {
+        if (isAuthenticated) navigate('/')
+    }, [isAuthenticated, navigate])
 
     return (
         <>
