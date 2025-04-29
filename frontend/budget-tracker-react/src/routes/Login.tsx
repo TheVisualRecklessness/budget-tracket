@@ -3,7 +3,7 @@ import { useNavigate } from "react-router";
 import axios from "axios";
 import { type authenticationType } from "../types/authentication";
 import '../styles/Login.css'
-import { AuthContext } from "../authentication/AuthContext";
+import { AuthContext } from "../context/AuthContext";
 
 export const Login = () => {
     const { isAuthenticated, setIsAuthenticated } = useContext(AuthContext)

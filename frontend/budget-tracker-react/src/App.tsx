@@ -3,6 +3,7 @@ import { Login } from "./routes/Login"
 import { Home } from "./routes/Home"
 import { AuthProvider } from "./authentication/AuthProvider"
 import { ProtectedRoute } from "./components/ProtectedRoute"
+import { Navbar } from "./components/Navbar"
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
           <Route path="/holo" element={
             <ProtectedRoute>
               <h1>hola</h1>
+              <Navbar />
             </ProtectedRoute>
           }>
 

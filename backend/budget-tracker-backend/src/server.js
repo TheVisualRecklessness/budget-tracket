@@ -105,7 +105,7 @@ app.post('/login', (req, res) => {
     });
 });
 
-app.post('/logout', (req, res) => {
+app.get('/logout', (req, res) => {
     res.clearCookie('userIdToken', clearCookieConfig);
     res.status(200).json({ message: 'Logout successful' });
 });
@@ -124,19 +124,19 @@ app.get('/check-authentication', authenticateToken, (req, res) => {
     });
 });
 
-app.get('/some-user', authenticateToken, (req, res) => {
+app.get('/get-name', authenticateToken, (req, res) => {
     const userId = req.user.id;
 
-    db.get('SELECT * FROM user WHERE id = ?', [userId], (err, row) => {
+    db.get('SELECT name FROM user WHERE id = ?', [userId], (err, row) => {
         if (err) {
-            return res.status(500).json({ error: 'Error fetching user', message: err.message });
+            return res.status(500).json({ error: 'Error retrieving user', message: err.message });
         }
         if (!row) {
             return res.status(404).json({ error: 'User not found' });
         }
-        res.status(200).json(row);
+        res.status(200).json({ message: 'User obtained', name: row.name });
     });
-});
+})
 
 // Start the server
 app.listen(PORT, () => {
